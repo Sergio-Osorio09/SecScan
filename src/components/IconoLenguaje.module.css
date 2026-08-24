@@ -1,0 +1,6 @@
+.icono {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  color: var(--texto-tenue);
+}

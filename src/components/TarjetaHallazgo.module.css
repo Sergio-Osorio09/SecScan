@@ -1,0 +1,217 @@
+.tarjeta {
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--color-severidad);
+  border-radius: var(--radio-s);
+  background: var(--superficie-2);
+  overflow: hidden;
+}
+
+.tarjeta[data-severidad='critica'] {
+  --color-severidad: var(--critica);
+  --fondo-severidad: var(--critica-fondo);
+}
+
+.tarjeta[data-severidad='alta'] {
+  --color-severidad: var(--alta);
+  --fondo-severidad: var(--alta-fondo);
+}
+
+.tarjeta[data-severidad='media'] {
+  --color-severidad: var(--media);
+  --fondo-severidad: var(--media-fondo);
+}
+
+.tarjeta[data-severidad='baja'] {
+  --color-severidad: var(--baja);
+  --fondo-severidad: var(--baja-fondo);
+}
+
+.cabecera {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    'severidad titulo flecha'
+    '. meta meta';
+  align-items: center;
+  gap: 4px 10px;
+  width: 100%;
+  padding: 11px 13px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  transition: background var(--transicion);
+}
+
+.cabecera:hover {
+  background: var(--superficie-3);
+}
+
+.severidad {
+  grid-area: severidad;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--fondo-severidad);
+  color: var(--color-severidad);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.titulo {
+  grid-area: titulo;
+  color: var(--texto);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.meta {
+  grid-area: meta;
+  color: var(--texto-tenue);
+  font-family: var(--fuente-mono);
+  font-size: 11.5px;
+}
+
+.flecha {
+  grid-area: flecha;
+  width: 16px;
+  height: 16px;
+  color: var(--texto-tenue);
+  transition: transform var(--transicion);
+}
+
+.cabecera[aria-expanded='true'] .flecha {
+  transform: rotate(180deg);
+}
+
+.detalle {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 14px 16px;
+  border-top: 1px solid var(--borde-suave);
+}
+
+.fragmento {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 9px 12px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-s);
+  background: var(--editor-fondo);
+  overflow-x: auto;
+  text-align: left;
+}
+
+.fragmento:hover {
+  border-color: var(--acento);
+}
+
+.fragmento code {
+  color: var(--texto);
+  font-size: 12.5px;
+  white-space: pre;
+}
+
+.numeroLinea {
+  flex: 0 0 auto;
+  color: var(--texto-tenue);
+  font-family: var(--fuente-mono);
+  font-size: 11px;
+}
+
+.bloque p {
+  color: var(--texto-suave);
+  font-size: 13.5px;
+  line-height: 1.62;
+}
+
+/* Los dos bloques con carga informativa llevan un filete al margen:
+   el del ataque en el color de la severidad, el de la solucion en verde. */
+.bloqueAtaque,
+.bloqueSolucion {
+  padding-left: 11px;
+  border-left: 2px solid var(--borde);
+}
+
+.bloqueAtaque {
+  border-left-color: var(--color-severidad);
+}
+
+.bloqueSolucion {
+  border-left-color: var(--ok);
+}
+
+.subtitulo {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 5px;
+  color: var(--texto);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.iconoBloque {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  color: var(--texto-tenue);
+  stroke-width: 1.4;
+}
+
+.bloqueAtaque .iconoBloque {
+  color: var(--color-severidad);
+}
+
+.bloqueSolucion .iconoBloque {
+  color: var(--ok);
+}
+
+.solucion {
+  margin: 10px 0 0;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-s);
+  background: var(--editor-fondo);
+  overflow: hidden;
+}
+
+.lenguajeFix {
+  padding: 5px 12px;
+  border-bottom: 1px solid var(--borde-suave);
+  background: var(--superficie-3);
+  color: var(--texto-tenue);
+  font-family: var(--fuente-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.solucion pre {
+  padding: 12px;
+  overflow-x: auto;
+  color: var(--texto);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.referencias {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 11px;
+  border-top: 1px dashed var(--borde);
+  color: var(--texto-tenue);
+  font-size: 11.5px;
+}
+
+.referencias strong {
+  color: var(--texto-suave);
+  font-family: var(--fuente-mono);
+  font-weight: 500;
+}

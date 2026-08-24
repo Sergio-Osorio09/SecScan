@@ -1,0 +1,136 @@
+/*
+ * Tokens de diseno de SecScan.
+ *
+ * La consola toma los colores por defecto de Xcode — el IDE de iOS — y los
+ * colores semanticos del sistema de iOS. Todo el color sale de aqui: ningun
+ * componente escribe un hexadecimal suelto.
+ *
+ * Tema oscuro por defecto; el claro usa la paleta "Default (Light)" de Xcode.
+ */
+
+:root,
+:root[data-tema='oscuro'] {
+  color-scheme: dark;
+
+  /* Superficies, de la mas profunda a la mas cercana.
+     Los pasos son deliberadamente cortos, como en la ventana de Xcode. */
+  --fondo: #121216;
+  --fondo-degradado: radial-gradient(120% 90% at 50% -20%, #1d1d24 0%, #121216 62%);
+  --superficie: #232328;
+  --superficie-2: #2a2a30;
+  --superficie-3: #313138;
+  --editor-fondo: #1f1f24;
+
+  /* Trazos */
+  --borde: #35353c;
+  --borde-suave: #2b2b31;
+  --borde-fuerte: #4a4a53;
+
+  /* Texto */
+  --texto: #dfdfe0;
+  --texto-suave: #a3a3ac;
+  --texto-tenue: #7f8c98;
+
+  /* Acento: cian de sistema de iOS en modo oscuro, vecino del azul de Xcode */
+  --acento: #64d2ff;
+  --acento-fuerte: #a2e6ff;
+  --acento-tenue: #14313d;
+  --sobre-acento: #08131a;
+
+  /* Severidades: colores de sistema de iOS (modo oscuro) */
+  --critica: #ff453a;
+  --critica-fondo: #2f1519;
+  --alta: #ff9f0a;
+  --alta-fondo: #2e2111;
+  --media: #ffd426;
+  --media-fondo: #2c2711;
+  --baja: #4a9eff;
+  --baja-fondo: #11223a;
+  --ok: #30d158;
+  --ok-fondo: #102a1a;
+
+  /* Sintaxis: tema "Default (Dark)" de Xcode */
+  --sx-texto: #dfdfe0;
+  --sx-comentario: #7f8c98;
+  --sx-cadena: #ff8170;
+  --sx-numero: #d9c97c;
+  --sx-clave: #ff7ab2;
+  --sx-tipo: #dabaff;
+  --sx-funcion: #67b7a4;
+  --sx-decorador: #ffa14f;
+  /* Semitransparente a proposito: la seleccion se pinta en el textarea, que
+     esta por encima de la capa de color; si fuera opaca la taparia. */
+  --sx-seleccion: rgba(63, 99, 139, 0.55);
+
+  --sombra: 0 28px 64px -32px rgba(0, 0, 0, 0.95);
+  --resalte-linea: rgba(100, 210, 255, 0.09);
+}
+
+:root[data-tema='claro'] {
+  color-scheme: light;
+
+  --fondo: #eceef1;
+  --fondo-degradado: radial-gradient(120% 90% at 50% -20%, #dfe4ea 0%, #eceef1 60%);
+  --superficie: #f7f8fa;
+  --superficie-2: #eff1f4;
+  --superficie-3: #e4e7ec;
+  --editor-fondo: #ffffff;
+
+  --borde: #d2d7de;
+  --borde-suave: #e2e6eb;
+  --borde-fuerte: #b3bac4;
+
+  --texto: #1d1d20;
+  --texto-suave: #4c545e;
+  --texto-tenue: #6f7b87;
+
+  --acento: #0a6a85;
+  --acento-fuerte: #085468;
+  --acento-tenue: #d8eff6;
+  --sobre-acento: #ffffff;
+
+  /* Severidades: colores de sistema de iOS (modo claro), ajustados para
+     mantener el contraste sobre fondo blanco. */
+  --critica: #c4001d;
+  --critica-fondo: #fdeaec;
+  --alta: #a63e00;
+  --alta-fondo: #fdefe4;
+  --media: #7d5a00;
+  --media-fondo: #fbf3dd;
+  --baja: #0040c1;
+  --baja-fondo: #e8eefd;
+  --ok: #15803d;
+  --ok-fondo: #e6f5ec;
+
+  /* Sintaxis: tema "Default (Light)" de Xcode */
+  --sx-texto: #262626;
+  --sx-comentario: #5d6c79;
+  --sx-cadena: #c41a16;
+  --sx-numero: #1c00cf;
+  --sx-clave: #9b2393;
+  --sx-tipo: #6c36a9;
+  --sx-funcion: #326d74;
+  --sx-decorador: #78492a;
+  --sx-seleccion: rgba(179, 215, 255, 0.65);
+
+  --sombra: 0 20px 50px -32px rgba(20, 24, 30, 0.45);
+  --resalte-linea: rgba(10, 106, 133, 0.08);
+}
+
+:root {
+  /* Tipografia */
+  --fuente-display: 'Sora', 'Segoe UI', system-ui, sans-serif;
+  --fuente-texto: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --fuente-mono: 'IBM Plex Mono', 'SF Mono', 'Cascadia Mono', Consolas, monospace;
+
+  /* Ritmo vertical del editor: el gutter, el resaltado, la capa de sintaxis y
+     el textarea comparten estas medidas o dejan de estar alineados. */
+  --editor-tam: 13px;
+  --editor-linea: 21px;
+  --editor-pad-y: 12px;
+  --editor-pad-x: 16px;
+
+  --radio: 10px;
+  --radio-s: 6px;
+  --transicion: 140ms ease;
+}

@@ -1,0 +1,36 @@
+.pie {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 90ch;
+  margin: 0 auto;
+  padding: 22px 20px 44px;
+  text-align: center;
+}
+
+.aviso {
+  color: var(--texto-tenue);
+  font-size: 12.5px;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.aviso strong {
+  color: var(--texto-suave);
+  font-weight: 600;
+}
+
+.firma {
+  color: var(--texto-tenue);
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* La firma del autor: presente, pero sin competir con el aviso de arriba. */
+.creditos {
+  margin-top: 10px;
+  color: var(--texto-tenue);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  opacity: 0.55;
+}

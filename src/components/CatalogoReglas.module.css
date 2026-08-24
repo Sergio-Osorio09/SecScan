@@ -1,0 +1,130 @@
+.catalogo {
+  width: min(1240px, calc(100% - 40px));
+  margin: 0 auto 18px;
+  padding: 20px 22px 18px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--superficie);
+}
+
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--borde-suave);
+}
+
+.titulo {
+  font-family: var(--fuente-display);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.cuenta {
+  color: var(--texto-tenue);
+  font-family: var(--fuente-mono);
+  font-size: 12px;
+}
+
+.columnas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px 22px;
+}
+
+.grupo[data-severidad='critica'] {
+  --color-severidad: var(--critica);
+}
+
+.grupo[data-severidad='alta'] {
+  --color-severidad: var(--alta);
+}
+
+.grupo[data-severidad='media'] {
+  --color-severidad: var(--media);
+}
+
+.grupo[data-severidad='baja'] {
+  --color-severidad: var(--baja);
+}
+
+.severidad {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: var(--color-severidad);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.punto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-severidad);
+}
+
+.numero {
+  color: var(--texto-tenue);
+  font-family: var(--fuente-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.regla {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 11px;
+  border-left: 2px solid var(--borde);
+}
+
+.nombre {
+  color: var(--texto-suave);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.referencias {
+  color: var(--texto-tenue);
+  font-family: var(--fuente-mono);
+  font-size: 10.5px;
+}
+
+.limite {
+  max-width: 92ch;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--borde);
+  color: var(--texto-tenue);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.limite strong {
+  color: var(--texto-suave);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .catalogo {
+    width: calc(100% - 24px);
+    padding: 16px;
+  }
+}

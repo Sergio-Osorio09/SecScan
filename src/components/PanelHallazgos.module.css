@@ -1,0 +1,137 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border-left: 1px solid var(--borde);
+  background: var(--superficie);
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 34px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--borde-suave);
+  background: var(--superficie-2);
+}
+
+.tituloPanel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--texto-suave);
+  font-family: var(--fuente-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.contador {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 17px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--acento-tenue);
+  color: var(--acento-fuerte);
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.accion {
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radio-s);
+  background: transparent;
+  color: var(--texto-tenue);
+  font-size: 12px;
+}
+
+.accion:hover {
+  border-color: var(--borde);
+  color: var(--texto);
+}
+
+.contenido {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 14px;
+  list-style: none;
+}
+
+.estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 100%;
+  padding: 40px 32px;
+  text-align: center;
+}
+
+.icono {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 4px;
+  color: var(--texto-tenue);
+  opacity: 0.5;
+}
+
+.limpio .icono {
+  color: var(--ok);
+  opacity: 1;
+}
+
+.limpio .tituloEstado {
+  color: var(--ok);
+}
+
+.tituloEstado {
+  color: var(--texto-suave);
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.textoEstado {
+  max-width: 46ch;
+  color: var(--texto-tenue);
+  font-size: 13px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.textoEstado strong {
+  color: var(--texto-suave);
+  font-weight: 500;
+}
+
+.radar {
+  width: 34px;
+  height: 34px;
+  margin-bottom: 4px;
+  border: 2px solid var(--acento-tenue);
+  border-top-color: var(--acento);
+  border-radius: 50%;
+  animation: girar 800ms linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}

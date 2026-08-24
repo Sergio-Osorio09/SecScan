@@ -1,0 +1,38 @@
+.barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 26px;
+  padding: 0 14px;
+  border-top: 1px solid var(--borde-suave);
+  background: var(--superficie-2);
+  color: var(--texto-suave);
+  font-family: var(--fuente-mono);
+  font-size: 11.5px;
+}
+
+.grupo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marca {
+  color: var(--acento);
+  font-weight: 600;
+}
+
+.estado {
+  color: var(--texto);
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .grupo > span:nth-child(2) {
+    display: none;
+  }
+}

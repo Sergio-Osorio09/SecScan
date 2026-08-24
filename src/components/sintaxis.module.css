@@ -1,0 +1,33 @@
+/*
+ * Colores del tema "Default" de Xcode, compartidos por el editor y por los
+ * fragmentos de codigo de las tarjetas: todo el codigo de la aplicacion se lee
+ * con la misma paleta.
+ */
+
+.comentario {
+  color: var(--sx-comentario);
+}
+
+.cadena {
+  color: var(--sx-cadena);
+}
+
+.numero {
+  color: var(--sx-numero);
+}
+
+.clave {
+  color: var(--sx-clave);
+}
+
+.tipo {
+  color: var(--sx-tipo);
+}
+
+.funcion {
+  color: var(--sx-funcion);
+}
+
+.decorador {
+  color: var(--sx-decorador);
+}
