@@ -1,5 +1,5 @@
 import type { Regla } from '../tipos';
-import { BT, CWE, OWASP, unir } from './utiles';
+import { BT, CWE, ES_DEFINICION, OWASP, unir } from './utiles';
 
 /**
  * Genera los patrones de SQL peligroso para UN delimitador de cadena concreto.
@@ -90,6 +90,12 @@ export const inyeccionDeComandos: Regla = {
     ],
     'g',
   ),
+  ignorarSiLinea: [
+    ES_DEFINICION,
+    // `os.system("python setup.py sdist")` es una constante: no hay nada que
+    // inyectar. Solo se avisa cuando el comando se compone con algo.
+    /\b(?:os\.system|os\.popen|shell_exec|passthru)\s*\(\s*["'][^"']*["']\s*\)/,
+  ],
   ficha: {
     queEncontramos:
       'El programa le está pidiendo al sistema operativo que ejecute un comando a través de una shell. Si alguna parte de ese comando viene de fuera — un formulario, un parámetro de la URL, un nombre de archivo — el usuario acaba escribiendo órdenes en tu servidor.',
@@ -132,7 +138,15 @@ export const evaluacionDinamica: Regla = {
     ],
     'g',
   ),
-  ignorarSiLinea: [/ast\.literal_eval|JSON\.parse/],
+  ignorarSiLinea: [
+    /ast\.literal_eval|JSON\.parse/,
+    ES_DEFINICION,
+    // En Node, `exec(` es el de child_process: ejecuta un comando, no evalua
+    // codigo. Lo cubre la regla de inyeccion de comandos, y con la ficha
+    // correcta. Medido sobre codigo real, esta linea sola quitaba 9 avisos
+    // equivocados de 12.
+    /\bawait\s+exec\s*\(|child_process|promisify|\bstdout\b/,
+  ],
   ficha: {
     queEncontramos:
       'eval() y exec() cogen una cadena de texto y la ejecutan como si fuera parte de tu programa. Cualquier dato que llegue hasta ahí deja de ser un dato y pasa a ser código con todos los permisos de la aplicación.',
@@ -227,6 +241,7 @@ export const plantillaDeServidor: Regla = {
     ],
     'g',
   ),
+  ignorarSiLinea: [ES_DEFINICION],
   ficha: {
     queEncontramos:
       'La plantilla que se va a renderizar no es un texto fijo: se está construyendo con datos que pueden venir de fuera. Y una plantilla no es texto — es código que el motor ejecuta en el servidor para producir el HTML.',

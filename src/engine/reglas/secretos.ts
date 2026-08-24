@@ -25,18 +25,28 @@ export const secretoEmbebido: Regla = {
   // El nombre de la clave puede venir entre comillas (JSON, YAML, diccionarios),
   // asi que no se descartan las coincidencias que caen dentro de una cadena.
   ignorarEnCadenas: false,
-  patron: unir(
-    [
-      // password = "admin123"  ·  "api_key": "sk_live_..."  ·  token := "..."
-      // Se usa `(?<![A-Za-z0-9])` y no `\b`: hace falta reconocer DB_PASSWORD
-      // (donde no hay frontera de palabra tras el guion bajo) sin picar con
-      // palabras que solo contienen la raiz, como "monkey" o "keyboard".
-      `(?<![A-Za-z0-9])${NOMBRES_SENSIBLES}\\s*["']?\\s*(?::=|=|:)\\s*(["'${BT}])(?![\\s"'${BT}])[^"'${BT}\\n]{3,}\\1`,
-      // Estilo .env / CI: DB_PASSWORD=SuperSecreta123 (sin comillas, en mayusculas)
-      `^[ \\t]*[A-Z][A-Z0-9_]*(?:PASSWORD|PASSWD|SECRET|TOKEN|KEY|CREDENTIALS?)\\s*=\\s*[^\\s"'${BT}#$]{6,}[ \\t]*$`,
-    ],
-    'gim',
-  ),
+  // Dos patrones porque necesitan banderas distintas: el primero no distingue
+  // mayusculas, el segundo las exige. Con `i` en el segundo, `AppOrBlueprintKey
+  // = t.Optional[str]` se tomaba por una credencial.
+  patron: [
+    // password = "admin123"  ·  "api_key": "sk_live_..."  ·  token := "..."
+    // Se usa `(?<![A-Za-z0-9])` y no `\b`: hace falta reconocer DB_PASSWORD
+    // (donde no hay frontera de palabra tras el guion bajo) sin picar con
+    // palabras que solo contienen la raiz, como "monkey" o "keyboard".
+    unir(
+      [
+        `(?<![A-Za-z0-9])${NOMBRES_SENSIBLES}\\s*["']?\\s*(?::=|=|:)\\s*(["'${BT}])(?![\\s"'${BT}])[^"'${BT}\\n]{3,}\\1`,
+      ],
+      'gi',
+    ),
+    // Estilo .env / CI: DB_PASSWORD=SuperSecreta123 (sin comillas, en MAYUSCULAS)
+    unir(
+      [
+        `^[ \\t]*[A-Z][A-Z0-9_]*(?:PASSWORD|PASSWD|SECRET|TOKEN|KEY|CREDENTIALS?)\\s*=\\s*[^\\s"'${BT}#$]{6,}[ \\t]*$`,
+      ],
+      'gm',
+    ),
+  ],
   ignorarSiLinea: [FUENTES_LEGITIMAS],
   ignorarSiCoincide: [VALORES_DE_RELLENO],
   ficha: {

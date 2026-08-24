@@ -113,6 +113,25 @@ export const secretoEmbebido: Regla = {
 };
 ```
 
+### Cuánto ruido genera, medido
+
+Que las pruebas pasen solo demuestra que no marca los casos correctos *que yo elegí*. Así que pasé
+el motor sobre **26.821 líneas de código ajeno y bien escrito** — requests, Flask, express y axios —
+y revisé cada hallazgo a mano:
+
+| | Hallazgos | Por cada 1.000 líneas |
+| --- | --- | --- |
+| Primera pasada | 30 | 1,12 |
+| **Tras corregir lo que destapó** | **9** | **0,34** |
+
+Los 21 que sobraban eran errores del motor —incluido un fallo real: un alias de tipo llamado
+`AppOrBlueprintKey` se tomaba por una credencial— y cada uno es hoy una prueba de regresión con la
+línea real que lo provocó. Los 9 que quedan son detecciones correctas sobre patrones que esos
+proyectos mantienen a propósito, como el MD5 que la especificación de HTTP Digest obliga a usar.
+
+El método, los datos y el detalle de cada corrección están en
+**[docs/falsos-positivos.md](docs/falsos-positivos.md)**. Es reproducible con `npm run auditoria`.
+
 ---
 
 ## Stack
@@ -127,7 +146,7 @@ export const secretoEmbebido: Regla = {
 | Motor | TypeScript puro, sin librerías |
 | Tipografías | Empaquetadas con la app (`@fontsource`), no se piden a un CDN |
 | Backend | **Ninguno** |
-| Pruebas | Vitest — 209 casos |
+| Pruebas | Vitest — 217 casos |
 | CI/CD | GitHub Actions → GitHub Pages |
 
 **Sin servidor = sin coste, sin mantenimiento y sin superficie de ataque.** La promesa de
@@ -150,6 +169,7 @@ npm run dev
 | `npm run test:watch` | Pruebas en modo continuo |
 | `npm run build` | Comprobación de tipos + build de producción |
 | `npm run lint` | ESLint |
+| `npm run auditoria` | Mide el ruido del motor sobre un corpus de código real |
 
 ---
 

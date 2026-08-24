@@ -38,45 +38,52 @@ export function analizar(codigo: string, opciones: OpcionesDeAnalisis = {}): Res
   const yaVistos = new Set<string>();
 
   for (const regla of reglas) {
-    // Copia del patron: `lastIndex` es estado mutable y las reglas se comparten.
-    const patron = new RegExp(regla.patron.source, regla.patron.flags);
     const ignorarEnCadenas = regla.ignorarEnCadenas ?? true;
-    let coincidencia: RegExpExecArray | null;
+    const ignorarEnDocumentacion = regla.ignorarEnDocumentacion ?? true;
 
-    while ((coincidencia = patron.exec(preparado.limpio)) !== null) {
-      // Un patron que puede coincidir con la cadena vacia colgaria el bucle.
-      if (coincidencia[0] === '') {
-        patron.lastIndex += 1;
-        continue;
+    for (const original of Array.isArray(regla.patron) ? regla.patron : [regla.patron]) {
+      // Copia del patron: `lastIndex` es estado mutable y las reglas se comparten.
+      const patron = new RegExp(original.source, original.flags);
+      let coincidencia: RegExpExecArray | null;
+
+      while ((coincidencia = patron.exec(preparado.limpio)) !== null) {
+        // Un patron que puede coincidir con la cadena vacia colgaria el bucle.
+        if (coincidencia[0] === '') {
+          patron.lastIndex += 1;
+          continue;
+        }
+
+        const offset = coincidencia.index;
+        if (ignorarEnCadenas && preparado.enCadena[offset]) continue;
+        // Los ejemplos de un docstring no son codigo que se ejecute.
+        if (ignorarEnDocumentacion && preparado.enDocumentacion[offset]) continue;
+
+        const linea = lineaDeOffset(preparado.iniciosDeLinea, offset);
+        const textoLinea = preparado.lineas[linea - 1] ?? '';
+
+        if (regla.ignorarSiLinea?.some((guarda) => guarda.test(textoLinea))) continue;
+        if (regla.ignorarSiCoincide?.some((guarda) => guarda.test(coincidencia![0]))) continue;
+
+        const clave = `${regla.id}:${linea}`;
+        if (yaVistos.has(clave)) continue;
+        yaVistos.add(clave);
+
+        const columna = offset - preparado.iniciosDeLinea[linea - 1] + 1;
+        hallazgos.push({
+          id: `${regla.id}:${linea}:${columna}`,
+          reglaId: regla.id,
+          titulo: regla.titulo,
+          severidad: regla.severidad,
+          owasp: regla.owasp,
+          cwe: regla.cwe,
+          linea,
+          columna,
+          fragmento: textoLinea.trim(),
+          ficha: regla.ficha,
+        });
+
+        if (hallazgos.length >= maxHallazgos) break;
       }
-
-      const offset = coincidencia.index;
-      if (ignorarEnCadenas && preparado.enCadena[offset]) continue;
-
-      const linea = lineaDeOffset(preparado.iniciosDeLinea, offset);
-      const textoLinea = preparado.lineas[linea - 1] ?? '';
-
-      if (regla.ignorarSiLinea?.some((guarda) => guarda.test(textoLinea))) continue;
-      if (regla.ignorarSiCoincide?.some((guarda) => guarda.test(coincidencia![0]))) continue;
-
-      const clave = `${regla.id}:${linea}`;
-      if (yaVistos.has(clave)) continue;
-      yaVistos.add(clave);
-
-      const columna = offset - preparado.iniciosDeLinea[linea - 1] + 1;
-      hallazgos.push({
-        id: `${regla.id}:${linea}:${columna}`,
-        reglaId: regla.id,
-        titulo: regla.titulo,
-        severidad: regla.severidad,
-        owasp: regla.owasp,
-        cwe: regla.cwe,
-        linea,
-        columna,
-        fragmento: textoLinea.trim(),
-        ficha: regla.ficha,
-      });
-
       if (hallazgos.length >= maxHallazgos) break;
     }
     if (hallazgos.length >= maxHallazgos) break;

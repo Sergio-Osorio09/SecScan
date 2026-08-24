@@ -52,3 +52,17 @@ export const CWE = {
 
 /** Comilla invertida escrita como escape, para no pelear con las plantillas de JS. */
 export const BT = '\\x60';
+
+/**
+ * Una linea que DEFINE algo no es una llamada peligrosa: `def send_file(...)`
+ * en el propio Flask, o `function exec(...)` en una libreria, son la
+ * implementacion, no el uso. Medido sobre codigo real, esta guarda sola
+ * elimina varios falsos positivos.
+ */
+export const ES_DEFINICION = /^\s*(?:async\s+)?(?:def|function|export\s+function|class)\s+\w/;
+
+/**
+ * Las rutas relativas de un `import` o un `require` llevan `../..` por
+ * naturaleza y no tienen nada que ver con un recorrido de directorios.
+ */
+export const ES_IMPORTACION = /^\s*(?:import\b|export\b.*\bfrom\b|from\s+["'.]|(?:const|let|var)\s+.*\brequire\s*\()/;

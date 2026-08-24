@@ -60,8 +60,12 @@ export interface Regla {
   severidad: Severidad;
   owasp: CategoriaOwasp;
   cwe: ReferenciaCwe;
-  /** Patron principal. Debe llevar la bandera `g`: se buscan todas las coincidencias. */
-  patron: RegExp;
+  /**
+   * Patron o patrones. Deben llevar la bandera `g`: se buscan todas las
+   * coincidencias. Se admite una lista para poder mezclar banderas — por
+   * ejemplo, una parte que distinga mayusculas y otra que no.
+   */
+  patron: RegExp | RegExp[];
   /**
    * Guardas negativas evaluadas sobre la LINEA COMPLETA donde cayo la coincidencia.
    * Existen para no gritarle a codigo que ya es correcto
@@ -77,6 +81,13 @@ export interface Regla {
    * ponen esto en `false`.
    */
   ignorarEnCadenas?: boolean;
+  /**
+   * Las cadenas de tres comillas suelen ser documentacion, y la documentacion
+   * esta llena de ejemplos deliberadamente malos: `DEBUG = True`, URLs http://,
+   * claves de juguete. Por defecto no se reportan; una regla puede pedir lo
+   * contrario poniendo esto en `false`.
+   */
+  ignorarEnDocumentacion?: boolean;
   ficha: FichaEducativa;
 }
 

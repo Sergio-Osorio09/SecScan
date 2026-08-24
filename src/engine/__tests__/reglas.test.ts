@@ -374,12 +374,68 @@ describe('catalogo de reglas', () => {
       expect(regla.ficha.fix.codigo.length, regla.id).toBeGreaterThan(20);
       expect(regla.owasp.id, regla.id).toMatch(/^A\d{2}:2021$/);
       expect(regla.cwe.id, regla.id).toMatch(/^CWE-\d+$/);
-      expect(regla.patron.flags, regla.id).toContain('g');
+      const patrones = Array.isArray(regla.patron) ? regla.patron : [regla.patron];
+      for (const patron of patrones) expect(patron.flags, regla.id).toContain('g');
     }
   });
 
   it('hay un caso de prueba por cada regla del catalogo', () => {
     expect(CASOS.map((c) => c.reglaId).sort()).toEqual(CATALOGO_DE_REGLAS.map((r) => r.id).sort());
+  });
+});
+
+/**
+ * Casos tomados literalmente de codigo real y bien escrito — Flask, requests,
+ * axios, express — que el motor marcaba por error. Cada uno costo un ajuste en
+ * su regla; estas pruebas existen para que no vuelvan.
+ */
+const CODIGO_REAL_QUE_NO_DEBE_MARCARSE: { fuente: string; codigo: string }[] = [
+  {
+    fuente: 'axios/bin/contributors.js — exec de child_process, no evaluacion de codigo',
+    codigo: 'const {stdout} = await exec(command, {maxBuffer: 10 * ONE_MB});',
+  },
+  {
+    fuente: 'axios/bin/sponsors.js — la concatenacion esta en el contenido, no en la ruta',
+    codigo: 'await fs.writeFile(path, sponsorContent + readmeContent);',
+  },
+  {
+    fuente: 'axios/lib/platform — los ../.. de un import no son un recorrido de directorios',
+    codigo: "import AxiosURLSearchParams from '../../../helpers/AxiosURLSearchParams.js';",
+  },
+  {
+    fuente: 'flask/helpers.py — la definicion de send_file, no una llamada',
+    codigo: 'def send_file(',
+  },
+  {
+    fuente: 'flask/templating.py — la definicion de render_template_string',
+    codigo: 'def render_template_string(source: str, **context: t.Any) -> str:',
+  },
+  {
+    fuente: 'flask/typing.py — un alias de tipo cuyo nombre acaba en Key',
+    codigo: 'AppOrBlueprintKey = t.Optional[str]',
+  },
+  {
+    fuente: 'requests/setup.py — os.system con una constante: no hay nada que inyectar',
+    codigo: 'os.system("python setup.py sdist bdist_wheel")',
+  },
+  {
+    fuente: 'flask/config.py — ejemplos dentro de un docstring',
+    codigo: `def from_object(self, obj):
+    """Carga la configuracion.
+
+        DEBUG = True
+        SECRET_KEY = 'development key'
+        app.config['IMAGE_STORE_BASE_URL'] = 'http://img.website.com'
+
+    Solo las claves en mayusculas se anaden.
+    """
+    return None`,
+  },
+];
+
+describe('codigo real que no debe generar hallazgos', () => {
+  it.each(CODIGO_REAL_QUE_NO_DEBE_MARCARSE)('$fuente', ({ codigo }) => {
+    expect(analizar(codigo).hallazgos).toEqual([]);
   });
 });
 

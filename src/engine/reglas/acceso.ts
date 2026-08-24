@@ -1,5 +1,5 @@
 import type { Regla } from '../tipos';
-import { BT, CWE, OWASP, unir } from './utiles';
+import { BT, CWE, ES_DEFINICION, ES_IMPORTACION, OWASP, unir } from './utiles';
 
 export const recorridoDeRutas: Regla = {
   id: 'recorrido-rutas',
@@ -18,9 +18,13 @@ export const recorridoDeRutas: Regla = {
       `\\bopen\\s*\\(\\s*f["'${BT}][^"'${BT}\\n]*\\{`,
       // Rutas compuestas con lo que llega en la peticion
       '\\bos\\.path\\.join\\s*\\([^)\\n]*(?:request\\.|req\\.|params|argv)',
-      '\\bsend_file\\s*\\(',
-      `\\bfs\\.(?:readFile|readFileSync|createReadStream|writeFile|writeFileSync|unlink)\\s*\\([^)\\n]*(?:\\+|\\$\\{|req\\.)`,
-      '\\bres\\.sendFile\\s*\\([^)\\n]*(?:\\+|\\$\\{|req\\.)',
+      // El destino tiene que ser dinamico. `send_file("informe.pdf")` es una
+      // constante y no se puede manipular; `send_file(ruta)` si.
+      '\\bsend_file\\s*\\(\\s*(?!["\'][^"\']*["\']\\s*\\))',
+      // La concatenacion debe estar en el PRIMER argumento, que es la ruta:
+      // `fs.writeFile(ruta, a + b)` concatena el contenido, no el destino.
+      `\\bfs\\.(?:readFile|readFileSync|createReadStream|writeFile|writeFileSync|unlink)\\s*\\(\\s*[^,)\\n]*(?:\\+|\\$\\{|req\\.)`,
+      '\\bres\\.sendFile\\s*\\(\\s*[^,)\\n]*(?:\\+|\\$\\{|req\\.)',
       // El payload clasico, escrito tal cual
       '\\.\\./\\.\\./',
       '%2e%2e(?:%2f|/)',
@@ -29,6 +33,8 @@ export const recorridoDeRutas: Regla = {
   ),
   ignorarSiLinea: [
     /secure_filename|os\.path\.basename|path\.basename|send_from_directory|sanitiz|allowlist|lista_blanca/i,
+    ES_DEFINICION,
+    ES_IMPORTACION,
   ],
   ficha: {
     queEncontramos:

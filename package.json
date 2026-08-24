@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "auditoria": "vite-node ./scripts/auditoria.ts"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.5",

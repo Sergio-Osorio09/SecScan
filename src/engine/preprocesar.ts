@@ -15,6 +15,12 @@ export interface CodigoPreparado {
   limpio: string;
   /** `true` en cada indice que cae dentro de una cadena de texto. */
   enCadena: boolean[];
+  /**
+   * `true` en cada indice que cae dentro de una cadena de tres comillas.
+   * En Python eso es casi siempre un docstring, y un docstring esta lleno de
+   * ejemplos malos a proposito que no son codigo de verdad.
+   */
+  enDocumentacion: boolean[];
   /** Offset donde arranca cada linea (indice 0 = linea 1). */
   iniciosDeLinea: number[];
   lineas: string[];
@@ -22,7 +28,7 @@ export interface CodigoPreparado {
 
 type Estado =
   | { tipo: 'normal' }
-  | { tipo: 'cadena'; cierre: string; multilinea: boolean }
+  | { tipo: 'cadena'; cierre: string; multilinea: boolean; documentacion: boolean }
   | { tipo: 'comentarioLinea' }
   | { tipo: 'comentarioBloque' };
 
@@ -32,6 +38,7 @@ export function prepararCodigo(codigo: string): CodigoPreparado {
   const n = codigo.length;
   const limpio: string[] = new Array(n);
   const enCadena: boolean[] = new Array(n).fill(false);
+  const enDocumentacion: boolean[] = new Array(n).fill(false);
   let estado: Estado = { tipo: 'normal' };
   let i = 0;
 
@@ -73,6 +80,10 @@ export function prepararCodigo(codigo: string): CodigoPreparado {
       if (c === '\\' && i + 1 < n) {
         enCadena[i] = true;
         enCadena[i + 1] = true;
+        if (estado.documentacion) {
+          enDocumentacion[i] = true;
+          enDocumentacion[i + 1] = true;
+        }
         copiar(i);
         copiar(i + 1);
         i += 2;
@@ -101,6 +112,7 @@ export function prepararCodigo(codigo: string): CodigoPreparado {
         continue;
       }
       enCadena[i] = true;
+      if (estado.documentacion) enDocumentacion[i] = true;
       copiar(i);
       i += 1;
       continue;
@@ -108,7 +120,7 @@ export function prepararCodigo(codigo: string): CodigoPreparado {
 
     // Estado normal
     if (COMILLAS_TRIPLES.includes(triple)) {
-      estado = { tipo: 'cadena', cierre: triple, multilinea: true };
+      estado = { tipo: 'cadena', cierre: triple, multilinea: true, documentacion: true };
       copiar(i);
       copiar(i + 1);
       copiar(i + 2);
@@ -116,7 +128,7 @@ export function prepararCodigo(codigo: string): CodigoPreparado {
       continue;
     }
     if (c === '"' || c === "'" || c === '`') {
-      estado = { tipo: 'cadena', cierre: c, multilinea: c === '`' };
+      estado = { tipo: 'cadena', cierre: c, multilinea: c === '`', documentacion: false };
       copiar(i);
       i += 1;
       continue;
@@ -145,7 +157,7 @@ export function prepararCodigo(codigo: string): CodigoPreparado {
     iniciosDeLinea.push(iniciosDeLinea[k] + lineas[k].length + 1);
   }
 
-  return { original: codigo, limpio: textoLimpio, enCadena, iniciosDeLinea, lineas };
+  return { original: codigo, limpio: textoLimpio, enCadena, enDocumentacion, iniciosDeLinea, lineas };
 }
 
 /** Traduce un offset absoluto a numero de linea (base 1) mediante busqueda binaria. */
