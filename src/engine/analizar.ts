@@ -97,6 +97,8 @@ export function analizar(codigo: string, opciones: OpcionesDeAnalisis = {}): Res
 
   return {
     hallazgos,
+    // Se alcanzo el tope: hay codigo que no se llego a revisar.
+    truncado: hallazgos.length >= maxHallazgos,
     resumen: resumir(hallazgos),
     lenguaje: detectarLenguaje(codigo),
     lineasAnalizadas: codigo.trim() ? preparado.lineas.length : 0,

@@ -1,5 +1,7 @@
 # SecScan
 
+[![CI y despliegue](https://github.com/Sergio-Osorio09/SecScan/actions/workflows/deploy.yml/badge.svg)](https://github.com/Sergio-Osorio09/SecScan/actions/workflows/deploy.yml)
+
 **Analiza tu código y aprende a protegerlo.** SecScan busca fallos de seguridad en código y
 configuración, y explica cada hallazgo en español: **qué es, cómo te atacarían y cómo se arregla**.
 
@@ -146,7 +148,7 @@ El método, los datos y el detalle de cada corrección están en
 | Motor | TypeScript puro, sin librerías |
 | Tipografías | Empaquetadas con la app (`@fontsource`), no se piden a un CDN |
 | Backend | **Ninguno** |
-| Pruebas | Vitest — 217 casos |
+| Pruebas | Vitest — 218 casos |
 | CI/CD | GitHub Actions → GitHub Pages |
 
 **Sin servidor = sin coste, sin mantenimiento y sin superficie de ataque.** La promesa de

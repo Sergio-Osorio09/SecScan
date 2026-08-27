@@ -51,9 +51,16 @@ respuesta = requests.get("https://api.miempresa.com/saldo", timeout=10)
     expect(analizar(codigo).hallazgos).toHaveLength(1);
   });
 
-  it('respeta el tope de hallazgos', () => {
+  it('respeta el tope de hallazgos y avisa de que la lista se recorto', () => {
     const codigo = Array.from({ length: 50 }, () => 'DEBUG = True').join('\n');
-    expect(analizar(codigo, { maxHallazgos: 5 }).hallazgos).toHaveLength(5);
+    const resultado = analizar(codigo, { maxHallazgos: 5 });
+    expect(resultado.hallazgos).toHaveLength(5);
+    expect(resultado.truncado).toBe(true);
+  });
+
+  it('un analisis normal no queda marcado como recortado', () => {
+    expect(analizar('DEBUG = True').truncado).toBe(false);
+    expect(analizar('').truncado).toBe(false);
   });
 
   it('el resumen cuadra con la lista de hallazgos', () => {

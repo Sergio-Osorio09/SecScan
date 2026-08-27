@@ -90,18 +90,28 @@ export function PanelHallazgos({
         )}
 
         {!escaneando && hallazgos.length > 0 && (
-          <ul className={estilos.lista}>
-            {hallazgos.map((hallazgo) => (
-              <li key={hallazgo.id}>
-                <TarjetaHallazgo
-                  hallazgo={hallazgo}
-                  expandida={expandidas.has(hallazgo.id)}
-                  onAlternar={() => onAlternarTarjeta(hallazgo.id)}
-                  onIrALinea={onIrALinea}
-                />
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className={estilos.lista}>
+              {hallazgos.map((hallazgo) => (
+                <li key={hallazgo.id}>
+                  <TarjetaHallazgo
+                    hallazgo={hallazgo}
+                    expandida={expandidas.has(hallazgo.id)}
+                    onAlternar={() => onAlternarTarjeta(hallazgo.id)}
+                    onIrALinea={onIrALinea}
+                  />
+                </li>
+              ))}
+            </ul>
+
+            {resultado?.truncado && (
+              <p className={estilos.tope}>
+                Se muestran los primeros {hallazgos.length} hallazgos. El archivo es lo bastante
+                grande como para que haya más sin revisar: analiza un fragmento más corto para
+                verlos todos.
+              </p>
+            )}
+          </>
         )}
       </div>
     </section>

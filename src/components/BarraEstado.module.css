@@ -36,3 +36,9 @@
     display: none;
   }
 }
+
+/* Explica por que el codigo dejo de verse coloreado. */
+.aviso {
+  color: var(--media);
+  opacity: 0.9;
+}

@@ -66,7 +66,7 @@ const PATRON = new RegExp(
 );
 
 /** A partir de este tamano se deja de colorear: no merece la pena bloquear el teclado. */
-const LIMITE_CARACTERES = 80_000;
+export const LIMITE_CARACTERES = 80_000;
 
 export function resaltarSintaxis(codigo: string): TokenSintaxis[] {
   if (!codigo) return [];

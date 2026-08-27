@@ -7,6 +7,8 @@ interface Props {
   totalHallazgos: number | null;
   duracionMs: number | null;
   escaneando: boolean;
+  /** Falso cuando el archivo supera el tamano a partir del cual se deja de colorear. */
+  resaltadoActivo: boolean;
 }
 
 export function BarraEstado({
@@ -15,6 +17,7 @@ export function BarraEstado({
   totalHallazgos,
   duracionMs,
   escaneando,
+  resaltadoActivo,
 }: Props) {
   const estadoAnalisis = () => {
     if (escaneando) return 'analizando…';
@@ -30,6 +33,11 @@ export function BarraEstado({
       <div className={estilos.grupo}>
         <span className={estilos.marca}>SecScan</span>
         <span>{etiquetaLenguaje}</span>
+        {!resaltadoActivo && (
+          <span className={estilos.aviso} title="El resaltado se desactiva en archivos grandes para que el editor siga respondiendo">
+            sin resaltado · archivo grande
+          </span>
+        )}
       </div>
       <div className={estilos.grupo}>
         <span>

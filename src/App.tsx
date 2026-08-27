@@ -13,6 +13,7 @@ import { CATALOGO_DE_REGLAS } from './engine/reglas';
 import { ETIQUETA_LENGUAJE, EXTENSION_LENGUAJE, detectarLenguaje } from './engine/preprocesar';
 import type { ResultadoAnalisis } from './engine/tipos';
 import { useTema } from './hooks/useTema';
+import { LIMITE_CARACTERES } from './components/resaltarSintaxis';
 import { EJEMPLOS_POR_ID } from './samples/ejemplos';
 
 /**
@@ -174,6 +175,7 @@ export default function App() {
           totalHallazgos={resultado ? resultado.hallazgos.length : null}
           duracionMs={resultado ? resultado.duracionMs : null}
           escaneando={escaneando}
+          resaltadoActivo={codigo.length <= LIMITE_CARACTERES}
         />
       </main>
 

@@ -124,4 +124,9 @@ export interface ResultadoAnalisis {
   lineasAnalizadas: number;
   /** Duracion del analisis en milisegundos (para la barra de estado). */
   duracionMs: number;
+  /**
+   * `true` si se alcanzo el tope y quedaron hallazgos sin reportar. La interfaz
+   * lo dice: ver exactamente 300 y no saber que hay mas es peor que no verlos.
+   */
+  truncado: boolean;
 }
