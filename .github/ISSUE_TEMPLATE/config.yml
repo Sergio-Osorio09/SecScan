@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Probar SecScan
+    url: https://sergio-osorio09.github.io/SecScan/
+    about: La demo en vivo, por si quieres reproducir el caso antes de reportarlo.
+  - name: Cómo contribuir
+    url: https://github.com/Sergio-Osorio09/SecScan/blob/main/CONTRIBUTING.md
+    about: Cómo añadir una regla y qué debe traer cada una.

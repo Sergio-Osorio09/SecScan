@@ -1,0 +1,36 @@
+name: Regla nueva
+description: Propón una vulnerabilidad que SecScan debería detectar
+labels: ["regla nueva"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Antes de proponerla, comprueba en el panel **"Ver las reglas que detecta"**
+        que no esté ya cubierta.
+  - type: input
+    id: vulnerabilidad
+    attributes:
+      label: Qué debería detectar
+      placeholder: "Uso de una clave de cifrado embebida en el código"
+    validations:
+      required: true
+  - type: textarea
+    id: vulnerable
+    attributes:
+      label: Código que SÍ debe marcarse
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: correcto
+    attributes:
+      label: Código parecido que NO debe marcarse
+      description: Igual de importante que el anterior; sin esto la regla genera ruido.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: referencias
+    attributes:
+      label: OWASP y CWE, si los conoces
+      placeholder: "A02:2021 · CWE-321"

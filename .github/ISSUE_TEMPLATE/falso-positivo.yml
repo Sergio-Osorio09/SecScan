@@ -1,0 +1,37 @@
+name: Falso positivo
+description: SecScan marca como fallo un código que está bien escrito
+labels: ["falso positivo"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias: este es el informe que más mejora la herramienta. Con la línea exacta
+        se puede reproducir, convertir en una prueba de regresión y cerrar.
+  - type: textarea
+    id: linea
+    attributes:
+      label: La línea que se marca
+      description: Pégala tal cual, sin recortar.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: regla
+    attributes:
+      label: Qué regla la marcó
+      description: El título del hallazgo, o su OWASP y CWE.
+      placeholder: "Contraseña o clave escrita en el código · A07:2021 · CWE-798"
+    validations:
+      required: true
+  - type: textarea
+    id: porque
+    attributes:
+      label: Por qué ese código es correcto
+      description: Una frase basta. Por ejemplo, que el valor viene de una variable de entorno.
+    validations:
+      required: true
+  - type: input
+    id: contexto
+    attributes:
+      label: Lenguaje y contexto
+      placeholder: "Python · un archivo de configuración de Django"

@@ -2,6 +2,8 @@
 
 [![CI y despliegue](https://github.com/Sergio-Osorio09/SecScan/actions/workflows/deploy.yml/badge.svg)](https://github.com/Sergio-Osorio09/SecScan/actions/workflows/deploy.yml)
 
+*[Read this in English](README.en.md)*
+
 **Analiza tu código y aprende a protegerlo.** SecScan busca fallos de seguridad en código y
 configuración, y explica cada hallazgo en español: **qué es, cómo te atacarían y cómo se arregla**.
 
@@ -11,6 +13,10 @@ sale de tu equipo.
 **Demo:** https://sergio-osorio09.github.io/SecScan/
 
 ![La consola de SecScan analizando un login vulnerable: a la izquierda el código con resaltado de sintaxis, a la derecha los hallazgos con su ficha educativa](docs/consola.png)
+
+**Cómo se usa:** pega el código, suéltale un archivo encima o carga uno de los cuatro ejemplos de
+un clic. Los chips de severidad filtran la lista, cada hallazgo enlaza a su ficha oficial de OWASP
+y de MITRE, y el código corregido se copia con un botón.
 
 ---
 
@@ -32,9 +38,9 @@ ejemplo con un clic y entendiendo el resultado.
 
 ## Qué detecta
 
-**23 reglas** que reconocen alrededor de 90 patrones concretos, agrupadas por categoría del
+**24 reglas** que reconocen alrededor de 90 patrones concretos, agrupadas por categoría del
 **OWASP Top 10 (2021)** y con su **CWE** correspondiente. La aplicación las muestra todas en el
-panel *"Ver las 23 reglas que detecta"*, para que quien venga a probarla sepa qué buscar.
+panel *"Ver las 24 reglas que detecta"*, para que quien venga a probarla sepa qué buscar.
 
 ![El catálogo completo de reglas, agrupadas por severidad, con su categoría OWASP y su CWE](docs/catalogo.png)
 
@@ -60,6 +66,7 @@ panel *"Ver las 23 reglas que detecta"*, para que quien venga a probarla sepa qu
 | Cifrado obsoleto o en modo ECB | Media | A02 | CWE-327 |
 | CORS abierto a cualquier origen | Media | A05 | CWE-942 |
 | Cookie de sesión sin sus atributos de seguridad | Media | A05 | CWE-614 |
+| Permisos de archivo demasiado abiertos | Media | A05 | CWE-732 |
 | Redirección hacia un destino que llega de fuera | Baja | A01 | CWE-601 |
 | Conexión HTTP sin cifrar | Baja | A02 | CWE-319 |
 | Modo depuración activado | Baja | A05 | CWE-489 |
@@ -148,7 +155,7 @@ El método, los datos y el detalle de cada corrección están en
 | Motor | TypeScript puro, sin librerías |
 | Tipografías | Empaquetadas con la app (`@fontsource`), no se piden a un CDN |
 | Backend | **Ninguno** |
-| Pruebas | Vitest — 218 casos |
+| Pruebas | Vitest — 251 casos |
 | CI/CD | GitHub Actions → GitHub Pages |
 
 **Sin servidor = sin coste, sin mantenimiento y sin superficie de ataque.** La promesa de
@@ -197,6 +204,8 @@ nombre, ajústalo en `vite.config.ts`.
 ---
 
 ## Contribuir
+
+Está todo en **[CONTRIBUTING.md](CONTRIBUTING.md)**, y hay plantillas de incidencia preparadas.
 
 Toda aportación es bienvenida: una regla nueva, una ficha educativa mejor redactada, un falso
 positivo que hayas encontrado. Para una regla, el camino es corto:
