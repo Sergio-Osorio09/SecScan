@@ -175,9 +175,54 @@ arbol = parse(archivo_recibido)
   },
 };
 
+export const permisosDemasiadoAbiertos: Regla = {
+  id: 'permisos-abiertos',
+  titulo: 'Permisos de archivo demasiado abiertos',
+  severidad: 'media',
+  owasp: OWASP.A05,
+  cwe: CWE.PERMISOS,
+  // La orden viaja dentro de una cadena: `os.system("chmod 777 ...")` o como
+  // lista de argumentos. Es justo ahi donde hay que mirar.
+  ignorarEnCadenas: false,
+  patron: unir(
+    [
+      // Entre `chmod` y el 777 puede haber banderas, comillas o comas: la orden
+      // aparece tal cual en un script, pero tambien como lista de argumentos.
+      '\\bchmod[^\\n]{0,20}\\b0?777\\b',
+      '\\bchmod[^\\n]{0,20}(?:a\\+rwx|ugo\\+rwx)\\b',
+      '\\bos\\.chmod\\s*\\([^)\\n]*0o?777',
+      '\\bfs\\.chmod(?:Sync)?\\s*\\([^)\\n]*0o?777',
+      '\\bumask\\s*\\(\\s*0+\\s*\\)',
+      '\\bChmod\\s*\\(\\s*0777\\s*\\)',
+    ],
+    'g',
+  ),
+  ficha: {
+    queEncontramos:
+      'Se están dando permisos de lectura, escritura y ejecución a todo el mundo: al dueño, a su grupo y a cualquier otra cuenta de la máquina. El 777 es el equivalente a dejar la puerta abierta y quitar la cerradura, y casi siempre aparece como atajo para resolver un "permiso denegado" que tenía otra causa.',
+    comoTeAtacarian:
+      'Basta con que alguien tenga una cuenta cualquiera en esa máquina —otro servicio, otro usuario, un contenedor que comparte volumen— para que pueda modificar el archivo. Si es un script que se ejecuta solo, por cron o al arrancar, le añade una línea y consigue ejecución con los permisos de quien lo lance, que a menudo es root. Si es un archivo de configuración, cambia la cadena de conexión y desvía tus datos. Y si además tiene permiso de escritura sobre el directorio, puede sustituir el archivo entero por otro. Es la vía habitual para pasar de una cuenta sin privilegios a controlar el servicio.',
+    comoSeArregla:
+      'Dale al archivo el mínimo que necesite: 600 para algo que solo lee su dueño —una clave, un .env—, 644 para lo que otros deben leer pero nadie más escribir, y 755 solo en ejecutables. Si el problema es que dos procesos necesitan el mismo archivo, la solución es un grupo común, no abrirlo a todos. Y `umask(0)` desactiva la protección por defecto de todo lo que ese proceso cree después, así que suele ser peor que el propio 777.',
+    fix: {
+      lenguaje: 'bash',
+      codigo: `# MAL: cualquiera en la maquina puede modificarlo
+# chmod 777 /var/app/config.env
+
+# BIEN: solo su dueno lo lee
+chmod 600 /var/app/config.env
+
+# Si otro servicio necesita leerlo, un grupo comun en vez de abrirlo a todos:
+chgrp app /var/app/config.env
+chmod 640 /var/app/config.env`,
+    },
+  },
+};
+
 export const reglasDeConfiguracion: Regla[] = [
   modoDepuracion,
   corsPermisivo,
   cookieInsegura,
   entidadesXml,
+  permisosDemasiadoAbiertos,
 ];

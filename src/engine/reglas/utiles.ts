@@ -8,14 +8,41 @@ export function unir(partes: string[], flags = 'g'): RegExp {
   return new RegExp(partes.join('|'), flags);
 }
 
-/** Categorías del OWASP Top 10 — edición 2021. */
+/**
+ * Categorías del OWASP Top 10 — edición 2021.
+ *
+ * Las URL apuntan a la edición en inglés: la traducción al español del sitio
+ * oficial no está publicada para 2021 y sus rutas devuelven 404.
+ */
+const BASE_OWASP = 'https://owasp.org/Top10/';
+
 export const OWASP = {
-  A01: { id: 'A01:2021', nombre: 'Pérdida de control de acceso' },
-  A02: { id: 'A02:2021', nombre: 'Fallos criptográficos' },
-  A03: { id: 'A03:2021', nombre: 'Inyección' },
-  A05: { id: 'A05:2021', nombre: 'Configuración de seguridad defectuosa' },
-  A07: { id: 'A07:2021', nombre: 'Fallos de identificación y autenticación' },
-  A08: { id: 'A08:2021', nombre: 'Fallos de integridad de software y datos' },
+  A01: {
+    id: 'A01:2021',
+    nombre: 'Pérdida de control de acceso',
+    url: `${BASE_OWASP}A01_2021-Broken_Access_Control/`,
+  },
+  A02: {
+    id: 'A02:2021',
+    nombre: 'Fallos criptográficos',
+    url: `${BASE_OWASP}A02_2021-Cryptographic_Failures/`,
+  },
+  A03: { id: 'A03:2021', nombre: 'Inyección', url: `${BASE_OWASP}A03_2021-Injection/` },
+  A05: {
+    id: 'A05:2021',
+    nombre: 'Configuración de seguridad defectuosa',
+    url: `${BASE_OWASP}A05_2021-Security_Misconfiguration/`,
+  },
+  A07: {
+    id: 'A07:2021',
+    nombre: 'Fallos de identificación y autenticación',
+    url: `${BASE_OWASP}A07_2021-Identification_and_Authentication_Failures/`,
+  },
+  A08: {
+    id: 'A08:2021',
+    nombre: 'Fallos de integridad de software y datos',
+    url: `${BASE_OWASP}A08_2021-Software_and_Data_Integrity_Failures/`,
+  },
 } satisfies Record<string, CategoriaOwasp>;
 
 /** Debilidades del catalogo CWE de MITRE. */
@@ -48,6 +75,10 @@ export const CWE = {
     nombre: 'Generador pseudoaleatorio criptográficamente débil',
   },
   REDIRECCION: { id: 'CWE-601', nombre: 'Redirección hacia un destino no confiable' },
+  PERMISOS: {
+    id: 'CWE-732',
+    nombre: 'Asignación de permisos incorrecta para un recurso crítico',
+  },
 } satisfies Record<string, ReferenciaCwe>;
 
 /** Comilla invertida escrita como escape, para no pelear con las plantillas de JS. */

@@ -28,12 +28,19 @@ export const ETIQUETA_SEVERIDAD: Record<Severidad, string> = {
 export interface CategoriaOwasp {
   id: string;
   nombre: string;
+  /** Pagina oficial de la categoria. La edicion en espanol no esta publicada. */
+  url: string;
 }
 
 /** Referencia a una debilidad del catalogo CWE de MITRE. */
 export interface ReferenciaCwe {
   id: string;
   nombre: string;
+}
+
+/** Ficha oficial de la debilidad en el catalogo de MITRE. */
+export function urlDeCwe(cwe: ReferenciaCwe): string {
+  return `https://cwe.mitre.org/data/definitions/${cwe.id.replace("CWE-", "")}.html`;
 }
 
 /**

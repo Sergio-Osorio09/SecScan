@@ -334,6 +334,21 @@ const CASOS: CasoDeRegla[] = [
     ],
   },
   {
+    reglaId: 'permisos-abiertos',
+    detecta: [
+      'os.chmod(ruta, 0o777)',
+      'subprocess.run(["chmod", "777", destino])',
+      'fs.chmodSync(ruta, 0o777);',
+      'os.umask(0)',
+    ],
+    noDetecta: [
+      'os.chmod(ruta, 0o600)',
+      'chmod 755 script.sh',
+      'os.umask(0o077)',
+      '# chmod 777 /var/app',
+    ],
+  },
+  {
     reglaId: 'modo-depuracion',
     detecta: [
       'DEBUG = True',
@@ -357,8 +372,8 @@ function analizarSoloCon(reglaId: string, codigo: string) {
 }
 
 describe('catalogo de reglas', () => {
-  it('cubre las 23 reglas del catalogo', () => {
-    expect(CATALOGO_DE_REGLAS).toHaveLength(23);
+  it('cubre las 24 reglas del catalogo', () => {
+    expect(CATALOGO_DE_REGLAS).toHaveLength(24);
   });
 
   it('no repite identificadores', () => {
