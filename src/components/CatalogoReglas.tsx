@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { CATALOGO_DE_REGLAS } from '../engine/reglas';
-import { ETIQUETA_SEVERIDAD } from '../engine/tipos';
+import { ETIQUETA_SEVERIDAD, urlDeCwe } from '../engine/tipos';
 import type { Severidad } from '../engine/tipos';
 import estilos from './CatalogoReglas.module.css';
 
@@ -52,7 +52,12 @@ export function CatalogoReglas({ id }: { id: string }) {
                 <li key={regla.id} className={estilos.regla}>
                   <span className={estilos.nombre}>{regla.titulo}</span>
                   <span className={estilos.referencias}>
-                    {regla.owasp.id} · {regla.cwe.id}
+                    <a href={regla.owasp.url} target="_blank" rel="noopener noreferrer">
+                      {regla.owasp.id}
+                    </a>{' · '}
+                    <a href={urlDeCwe(regla.cwe)} target="_blank" rel="noopener noreferrer">
+                      {regla.cwe.id}
+                    </a>
                   </span>
                 </li>
               ))}

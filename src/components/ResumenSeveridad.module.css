@@ -1,15 +1,16 @@
 .resumen {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
-  margin: 0;
   padding: 10px 14px;
-  list-style: none;
   border-bottom: 1px solid var(--borde-suave);
 }
 
 .chip {
   display: inline-flex;
+  cursor: pointer;
+  transition: background var(--transicion), box-shadow var(--transicion);
   align-items: center;
   gap: 7px;
   padding: 4px 11px;
@@ -49,4 +50,34 @@
 .chip[data-severidad='baja'] {
   --color-severidad: var(--baja);
   --fondo-severidad: var(--baja-fondo);
+}
+
+/* Filtro puesto: el chip se marca sin cambiar de color, para que la
+   severidad siga leyendose igual. */
+.chip[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 1px var(--color-severidad);
+  font-weight: 600;
+}
+
+.chip:hover {
+  background: var(--superficie-3);
+}
+
+.chip[aria-pressed="true"]:hover {
+  background: var(--fondo-severidad);
+}
+
+.quitar {
+  margin-left: 2px;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--texto-tenue);
+  font-size: 12px;
+}
+
+.quitar:hover {
+  border-color: var(--borde);
+  color: var(--texto);
 }

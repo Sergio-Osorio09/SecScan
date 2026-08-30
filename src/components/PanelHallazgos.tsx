@@ -1,4 +1,4 @@
-import type { ResultadoAnalisis } from '../engine/tipos';
+import type { ResultadoAnalisis, Severidad } from '../engine/tipos';
 import estilos from './PanelHallazgos.module.css';
 import { ResumenSeveridad } from './ResumenSeveridad';
 import { TarjetaHallazgo } from './TarjetaHallazgo';
@@ -7,6 +7,8 @@ interface Props {
   resultado: ResultadoAnalisis | null;
   escaneando: boolean;
   expandidas: Set<string>;
+  filtro: Severidad | null;
+  onFiltrar: (severidad: Severidad | null) => void;
   onAlternarTarjeta: (id: string) => void;
   onExpandirTodo: () => void;
   onIrALinea: (linea: number) => void;
@@ -16,11 +18,14 @@ export function PanelHallazgos({
   resultado,
   escaneando,
   expandidas,
+  filtro,
+  onFiltrar,
   onAlternarTarjeta,
   onExpandirTodo,
   onIrALinea,
 }: Props) {
-  const hallazgos = resultado?.hallazgos ?? [];
+  const todos = resultado?.hallazgos ?? [];
+  const hallazgos = filtro ? todos.filter((h) => h.severidad === filtro) : todos;
   const todasAbiertas = hallazgos.length > 0 && expandidas.size === hallazgos.length;
 
   return (
@@ -28,16 +33,22 @@ export function PanelHallazgos({
       <header className={estilos.cabecera}>
         <h2 className={estilos.tituloPanel}>
           Hallazgos
-          {resultado && <span className={estilos.contador}>{hallazgos.length}</span>}
+          {resultado && (
+            <span className={estilos.contador}>
+              {filtro ? `${hallazgos.length} de ${todos.length}` : hallazgos.length}
+            </span>
+          )}
         </h2>
-        {hallazgos.length > 0 && (
+        {todos.length > 0 && (
           <button type="button" className={estilos.accion} onClick={onExpandirTodo}>
             {todasAbiertas ? 'Contraer todo' : 'Expandir todo'}
           </button>
         )}
       </header>
 
-      {resultado && hallazgos.length > 0 && <ResumenSeveridad resumen={resultado.resumen} />}
+      {resultado && todos.length > 0 && (
+        <ResumenSeveridad resumen={resultado.resumen} filtro={filtro} onFiltrar={onFiltrar} />
+      )}
 
       <div className={estilos.contenido} aria-live="polite" aria-busy={escaneando}>
         {escaneando && (
@@ -106,7 +117,7 @@ export function PanelHallazgos({
 
             {resultado?.truncado && (
               <p className={estilos.tope}>
-                Se muestran los primeros {hallazgos.length} hallazgos. El archivo es lo bastante
+                Se muestran los primeros {todos.length} hallazgos. El archivo es lo bastante
                 grande como para que haya más sin revisar: analiza un fragmento más corto para
                 verlos todos.
               </p>

@@ -135,3 +135,10 @@
   box-shadow: inset 0 0 0 1px var(--acento);
   border-radius: 0;
 }
+
+/* Mientras se arrastra un archivo encima del editor. */
+.arrastrando {
+  outline: 2px dashed var(--acento);
+  outline-offset: -6px;
+  background: var(--resalte-linea);
+}

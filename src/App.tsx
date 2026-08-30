@@ -11,7 +11,7 @@ import { PieDePagina } from './components/PieDePagina';
 import { analizar } from './engine/analizar';
 import { CATALOGO_DE_REGLAS } from './engine/reglas';
 import { ETIQUETA_LENGUAJE, EXTENSION_LENGUAJE, detectarLenguaje } from './engine/preprocesar';
-import type { ResultadoAnalisis } from './engine/tipos';
+import type { ResultadoAnalisis, Severidad } from './engine/tipos';
 import { useTema } from './hooks/useTema';
 import { LIMITE_CARACTERES } from './components/resaltarSintaxis';
 import { EJEMPLOS_POR_ID } from './samples/ejemplos';
@@ -37,6 +37,7 @@ export default function App() {
   const [cursor, setCursor] = useState<PosicionCursor>({ linea: 1, columna: 1 });
   const [ejemploActivo, setEjemploActivo] = useState<string | null>(null);
   const [catalogoAbierto, setCatalogoAbierto] = useState(false);
+  const [filtro, setFiltro] = useState<Severidad | null>(null);
 
   const temporizador = useRef<number | null>(null);
   useEffect(() => () => window.clearTimeout(temporizador.current ?? undefined), []);
@@ -52,6 +53,7 @@ export default function App() {
       setResultado(null);
       setExpandidas(new Set());
       setLineaResaltada(null);
+      setFiltro(null);
 
       window.clearTimeout(temporizador.current ?? undefined);
       temporizador.current = window.setTimeout(() => {
@@ -95,6 +97,7 @@ export default function App() {
     setExpandidas(new Set());
     setLineaResaltada(null);
     setEjemploActivo(null);
+    setFiltro(null);
     setCursor({ linea: 1, columna: 1 });
   }, []);
 
@@ -156,13 +159,15 @@ export default function App() {
             lineaResaltada={lineaResaltada}
             onCambio={cambiarCodigo}
             onMoverCursor={setCursor}
-            onEjecutar={() => ejecutar()}
+            onEjecutar={ejecutar}
           />
 
           <PanelHallazgos
             resultado={resultado}
             escaneando={escaneando}
             expandidas={expandidas}
+            filtro={filtro}
+            onFiltrar={setFiltro}
             onAlternarTarjeta={alternarTarjeta}
             onExpandirTodo={alternarTodas}
             onIrALinea={setLineaResaltada}

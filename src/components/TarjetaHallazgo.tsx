@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { urlDeCwe } from '../engine/tipos';
 import type { Hallazgo, Severidad } from '../engine/tipos';
 import { CodigoResaltado } from './CodigoResaltado';
 import estilos from './TarjetaHallazgo.module.css';
@@ -50,6 +52,18 @@ function IconoSolucion() {
 
 export function TarjetaHallazgo({ hallazgo, expandida, onAlternar, onIrALinea }: Props) {
   const idDetalle = `detalle-${hallazgo.id.replace(/[^\w-]/g, '_')}`;
+  const [copiado, setCopiado] = useState(false);
+
+  const copiarSolucion = async () => {
+    try {
+      await navigator.clipboard.writeText(hallazgo.ficha.fix.codigo);
+      setCopiado(true);
+      window.setTimeout(() => setCopiado(false), 2000);
+    } catch {
+      // Sin permiso de portapapeles (o sin HTTPS): el codigo sigue
+      // seleccionable a mano, asi que no se interrumpe al usuario.
+    }
+  };
 
   return (
     <article className={estilos.tarjeta} data-severidad={hallazgo.severidad}>
@@ -111,7 +125,12 @@ export function TarjetaHallazgo({ hallazgo, expandida, onAlternar, onIrALinea }:
             </h4>
             <p>{hallazgo.ficha.comoSeArregla}</p>
             <figure className={estilos.solucion}>
-              <figcaption className={estilos.lenguajeFix}>{hallazgo.ficha.fix.lenguaje}</figcaption>
+              <figcaption className={estilos.lenguajeFix}>
+                {hallazgo.ficha.fix.lenguaje}
+                <button type="button" className={estilos.copiar} onClick={copiarSolucion}>
+                  {copiado ? 'Copiado' : 'Copiar'}
+                </button>
+              </figcaption>
               <pre>
                 <code>
                   <CodigoResaltado texto={hallazgo.ficha.fix.codigo} />
@@ -121,12 +140,12 @@ export function TarjetaHallazgo({ hallazgo, expandida, onAlternar, onIrALinea }:
           </section>
 
           <footer className={estilos.referencias}>
-            <span>
+            <a href={hallazgo.owasp.url} target="_blank" rel="noopener noreferrer">
               <strong>{hallazgo.owasp.id}</strong> {hallazgo.owasp.nombre}
-            </span>
-            <span>
+            </a>
+            <a href={urlDeCwe(hallazgo.cwe)} target="_blank" rel="noopener noreferrer">
               <strong>{hallazgo.cwe.id}</strong> {hallazgo.cwe.nombre}
-            </span>
+            </a>
           </footer>
         </div>
       )}

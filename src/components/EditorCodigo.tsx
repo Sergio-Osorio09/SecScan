@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { Lenguaje } from '../engine/tipos';
 import { CodigoResaltado } from './CodigoResaltado';
 import { IconoLenguaje } from './IconoLenguaje';
@@ -7,6 +7,9 @@ import estilos from './EditorCodigo.module.css';
 /** Deben coincidir con --editor-linea y --editor-pad-y de tokens.css. */
 const ALTO_LINEA = 21;
 const RELLENO_VERTICAL = 12;
+
+/** Mas de esto no es codigo que alguien vaya a revisar a mano. */
+const MAXIMO_ARCHIVO = 2 * 1024 * 1024;
 
 export interface PosicionCursor {
   linea: number;
@@ -20,7 +23,7 @@ interface Props {
   lineaResaltada: number | null;
   onCambio: (valor: string) => void;
   onMoverCursor: (posicion: PosicionCursor) => void;
-  onEjecutar: () => void;
+  onEjecutar: (fuente?: string) => void;
 }
 
 const MARCADOR = `// Pega aquí tu código o tu archivo de configuración.
@@ -92,6 +95,30 @@ export function EditorCodigo({
     [totalLineas],
   );
 
+  const [arrastrando, setArrastrando] = useState(false);
+
+  /**
+   * Soltar un archivo encima lo carga y lo analiza. Se lee como texto: si
+   * alguien suelta una imagen o un binario saldra ruido, asi que se descarta
+   * por tamano y se avisa de que solo tiene sentido con codigo.
+   */
+  const soltarArchivo = useCallback(
+    async (evento: React.DragEvent) => {
+      evento.preventDefault();
+      setArrastrando(false);
+      const archivo = evento.dataTransfer.files[0];
+      if (!archivo) return;
+      if (archivo.size > MAXIMO_ARCHIVO) {
+        onCambio(`// El archivo "${archivo.name}" pasa de 2 MB y no se ha cargado.`);
+        return;
+      }
+      const texto = await archivo.text();
+      onCambio(texto);
+      onEjecutar(texto);
+    },
+    [onCambio, onEjecutar],
+  );
+
 
   return (
     <div className={estilos.editor}>
@@ -102,7 +129,15 @@ export function EditorCodigo({
         </span>
       </div>
 
-      <div className={estilos.area}>
+      <div
+        className={arrastrando ? `${estilos.area} ${estilos.arrastrando}` : estilos.area}
+        onDragOver={(evento) => {
+          evento.preventDefault();
+          setArrastrando(true);
+        }}
+        onDragLeave={() => setArrastrando(false)}
+        onDrop={soltarArchivo}
+      >
         <div className={estilos.numeros} ref={refNumeros} aria-hidden="true">
           {numeros.map((numero) => (
             <div
